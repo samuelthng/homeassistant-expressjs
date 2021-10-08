@@ -1,12 +1,24 @@
 import WebSocket from 'ws';
 import { HA_AUTH_MESSAGE, HA_WS } from '../constants';
+
 const ws = new WebSocket(HA_WS);
-ws.on('open', () => console.log('Socket connected...'));
+export const isSocketConnected = false;
+
+const send = (data) => {
+	const message = JSON.stringify(data);
+	return ws.send(message);
+}
+
+const handlers = {
+	auth_required: () => send(HA_AUTH_MESSAGE),
+	auth_ok: () => isSocketConnected = true,
+};
+
 ws.on('message', (message) => {
-	console.log(`[WS]\t${message}`);
-	if (JSON.parse(message).type === 'auth_required'){
-		console.log('Handling Auth');
-		ws.send(JSON.stringify(HA_AUTH_MESSAGE), (error) => console.error(error));
-	}
+	const data = JSON.parse(message);
+	const handler = handlers[data.type];
+	if (typeof handler === 'function') handler(data);
+	else console.log(`[WS]\t${message}`);
 });
+
 export default ws;
