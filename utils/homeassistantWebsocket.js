@@ -3,17 +3,21 @@ import { HA_AUTH_MESSAGE, HA_WS } from '../constants';
 
 const ws = new WebSocket(HA_WS);
 export let isSocketConnected = false;
-
+let count = 0;
 const registry = {};
 
 const send = (data, callback) => {
-	if (!isSocketConnected && data.type !== 'auth') throw Error('Socket is not connect or authenticated.');
-	if (data.id) registry[data.id] = {
-		request: data,
-		callback,
-		subscribed: data.type === 'subscribe_events'
-	};
-	const message = JSON.stringify(data);
+	if (data.type !== 'auth') {
+		if (!isSocketConnected) throw Error('Socket is not connect or authenticated.');
+		count++;
+		data.id = count;
+		registry[data.id] = {
+			request: data,
+			callback,
+			subscribed: data.type === 'subscribe_events'
+		};
+	}
+	const message = JSON.stringify({ id: count, ...data });
 	return ws.send(message);
 }
 
@@ -38,28 +42,25 @@ const handlers = {
 };
 
 export const commands = {
-	ping: (id, callback) => send({ id, type: "ping" }, callback),
-	getStates: (id, callback) => send({ id, type: 'get_states' }, callback),
-	getConfig: (id, callback) => send({ id, type: 'get_config' }, callback),
-	getServices: (id, callback) => send({ id, type: 'get_services' }, callback),
-	getPanels: (id, callback) => send({ id, type: 'get_panels' }, callback),
-	callService: (id, callback, domain, service, service_data = undefined, target = undefined) => send({
-		id,
+	ping: (callback) => send({ type: "ping" }, callback),
+	getStates: (callback) => send({ type: 'get_states' }, callback),
+	getConfig: (callback) => send({ type: 'get_config' }, callback),
+	getServices: (callback) => send({ type: 'get_services' }, callback),
+	getPanels: (callback) => send({ type: 'get_panels' }, callback),
+	callService: (callback, domain, service, service_data = undefined, target = undefined) => send({
 		type: 'call_service',
 		domain,
 		service,
 		...(service_data ? { service_data } : {}),
 		...(target ? { target } : {}),
 	}, callback),
-	subscribeEvent: (id, callback, event_type = undefined) => send({
-		id,
+	subscribeEvent: (callback, event_type = undefined) => send({
 		type: 'subscribe_events',
 		...(event_type ? { event_type } : {}),
 	}, callback),
-	unsubscribeEvent: (id, callback, subscription) => {
+	unsubscribeEvent: (callback, subscription) => {
 		if (registry[subscription]) registry[subscription].subscribed = false;
 		send({
-			id,
 			type: 'unsubscribe_events',
 			subscription
 		}, callback);
