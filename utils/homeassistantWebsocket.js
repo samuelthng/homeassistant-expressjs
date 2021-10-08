@@ -24,18 +24,24 @@ const send = (data, callback) => {
 const handlers = {
 	auth_required: () => send(HA_AUTH_MESSAGE),
 	auth_ok: () => isSocketConnected = true,
+	pong: (data) => {
+		if (data.id && registry[data.id] !== undefined) {
+			registry[data.id].response = data;
+			if (typeof registry[data.id].callback === 'function') registry[data.id].callback(Object.assign({}, registry[data.id]));
+			if (!registry[data.id].subscribed) registry[data.id] = undefined;
+		}
+	},
 	event: (data) => {
 		if (data.id && !registry[data.id]) commands.unsubscribeEvent(data.id, data.id);
 		if (data.id && registry[data.id]) {
-			if (typeof callback === 'function') callback(Object.assign({}, data));
+			if (typeof registry[data.id].callback === 'function') registry[data.id].callback(Object.assign({}, data));
 			registry[data.id].state = data;
 		}
 	},
 	result: (data) => {
 		if (data.id && registry[data.id] !== undefined) {
 			registry[data.id].response = data;
-			console.log(registry[data.id]);
-			if (typeof callback === 'function') callback(Object.assign({}, registry[data.id]));
+			if (typeof registry[data.id].callback === 'function') registry[data.id].callback(Object.assign({}, registry[data.id]));
 			if (!registry[data.id].subscribed) registry[data.id] = undefined;
 		}
 	}
