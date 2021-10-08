@@ -38,12 +38,12 @@ const handlers = {
 };
 
 export const commands = {
-	ping = (id, callback) => send({ id, type: "ping" }, callback),
-	getStates = (id, callback) => send({ id, type: 'get_states' }, callback),
-	getConfig = (id, callback) => send({ id, type: 'get_config' }, callback),
-	getServices = (id, callback) => send({ id, type: 'get_services' }, callback),
-	getPanels = (id, callback) => send({ id, type: 'get_panels' }, callback),
-	callService = (id, callback, domain, service, service_data = undefined, target = undefined) => send({
+	ping: (id, callback) => send({ id, type: "ping" }, callback),
+	getStates: (id, callback) => send({ id, type: 'get_states' }, callback),
+	getConfig: (id, callback) => send({ id, type: 'get_config' }, callback),
+	getServices: (id, callback) => send({ id, type: 'get_services' }, callback),
+	getPanels: (id, callback) => send({ id, type: 'get_panels' }, callback),
+	callService: (id, callback, domain, service, service_data = undefined, target = undefined) => send({
 		id,
 		type: 'call_service',
 		domain,
@@ -51,12 +51,12 @@ export const commands = {
 		...(service_data ? { service_data } : {}),
 		...(target ? { target } : {}),
 	}, callback),
-	subscribeEvent = (id, callback, event_type = undefined) => send({
+	subscribeEvent: (id, callback, event_type = undefined) => send({
 		id,
 		type: 'subscribe_events',
 		...(event_type ? { event_type } : {}),
 	}, callback),
-	unsubscribeEvent = (id, callback, subscription) => {
+	unsubscribeEvent: (id, callback, subscription) => {
 		if (registry[subscription]) registry[subscription].subscribed = false;
 		send({
 			id,
