@@ -4,9 +4,9 @@ import { HA_AUTH_HEADER, HA_URL, PORT } from './constants';
 
 const app = express();
 
-app.get('/test', async (req, res) => {
+app.get('/api/config', async (req, res) => {
 	try {
-		const response = await axios.get(HA_URL, HA_AUTH_HEADER);
+		const response = await axios.get(`${HA_URL}/config`, HA_AUTH_HEADER);
 		res.status(response.status).send(response.data);
 	} catch (error) {
 		res.status(400).send(error);
