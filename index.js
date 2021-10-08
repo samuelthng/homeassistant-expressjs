@@ -31,4 +31,5 @@ app.post('/homeassistant*', async (req, res) => {
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
 
-console.log(socket);
+console.log('Fetching socket config');
+socket.send({ id: 19, type: "get_config" });
