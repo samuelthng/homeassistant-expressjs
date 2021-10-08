@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import { HA_AUTH_HEADER, HA_URL, PORT } from './constants';
-import socket from './utils/homeassistantWebsocket';
+import socket, { commands } from './utils/homeassistantWebsocket';
 
 const app = express();
 
@@ -27,6 +27,15 @@ app.post('/homeassistant*', async (req, res) => {
 	} catch (error) {
 		res.status(400).send(error);
 	}
+});
+
+app.get('/websocket/:function/*', (req, res) => {
+	const handler = commands[req.params.function];
+	if (!handler || typeof handler !== 'function') res.status(404).send({ message: 'Handler not found.' });
+	const [idStr, ...params = []] = req.originalUrl.split(`/websocket/${req.params.function}/`)[1].split('/');
+	const id = Number.parseInt(idStr);
+	handler(id, ...params);
+	res.status(200).send({ id, command: req.params.function, params });
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
