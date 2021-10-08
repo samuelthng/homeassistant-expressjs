@@ -5,8 +5,12 @@ import { HA_AUTH_HEADER, HA_URL, PORT } from './constants';
 const app = express();
 
 app.get('/test', async (req, res) => {
-	const response = await axios.get(HA_URL, HA_AUTH_HEADER);
-	res.status(response.status).send(response.data);
+	try {
+		const response = await axios.get(HA_URL, HA_AUTH_HEADER);
+		res.status(response.status).send(response.data);
+	} catch (error) {
+		res.status(400).send(error);
+	}
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
