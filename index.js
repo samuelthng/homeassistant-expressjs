@@ -29,7 +29,7 @@ app.post('/homeassistant*', async (req, res) => {
 	}
 });
 
-app.get('/websocket/:function/*', (req, res) => {
+app.get('/websocket/:function/?*', (req, res) => {
 	const handler = commands[req.params.function];
 	if (!handler || typeof handler !== 'function') res.status(404).send({ message: 'Handler not found.' });
 	const params = req.originalUrl.split(`/websocket/${req.params.function}/`)[1].split('/');
