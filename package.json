@@ -1,0 +1,27 @@
+{
+  "name": "homeassistant-expressjs",
+  "version": "1.0.0",
+  "description": "Simple ExpressJS server for homeassistant services.",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelthng/homeassistant-expressjs.git"
+  },
+  "author": "Samuel Thng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelthng/homeassistant-expressjs/issues"
+  },
+  "homepage": "https://github.com/samuelthng/homeassistant-expressjs#readme",
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
+    "@babel/preset-env": "^7.15.8"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
