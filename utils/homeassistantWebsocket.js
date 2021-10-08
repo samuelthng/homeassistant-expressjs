@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { HA_AUTH_MESSAGE, HA_WS } from '../constants';
 
 const ws = new WebSocket(HA_WS);
-export const isSocketConnected = false;
+export let isSocketConnected = false;
 
 const registry = {};
 
