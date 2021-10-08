@@ -32,9 +32,9 @@ app.post('/homeassistant*', async (req, res) => {
 app.get('/websocket/:function/*', (req, res) => {
 	const handler = commands[req.params.function];
 	if (!handler || typeof handler !== 'function') res.status(404).send({ message: 'Handler not found.' });
-	const [idStr, ...params = []] = req.originalUrl.split(`/websocket/${req.params.function}/`)[1].split('/');
+	const [idStr, ...params] = req.originalUrl.split(`/websocket/${req.params.function}/`)[1].split('/');
 	const id = Number.parseInt(idStr);
-	handler(id, ...params);
+	handler(id, ...(params || []));
 	res.status(200).send({ id, command: req.params.function, params });
 });
 
