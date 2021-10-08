@@ -7,7 +7,7 @@ export const isSocketConnected = false;
 const registry = {};
 
 const send = (data, callback) => {
-	if (!isSocketConnected) throw Error('Socket is not connect or authenticated.');
+	if (!isSocketConnected && data.type !== 'auth') throw Error('Socket is not connect or authenticated.');
 	if (data.id) registry[id] = {
 		request: data,
 		callback,
