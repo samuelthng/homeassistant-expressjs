@@ -8,7 +8,7 @@ const registry = {};
 
 const send = (data, callback) => {
 	if (!isSocketConnected && data.type !== 'auth') throw Error('Socket is not connect or authenticated.');
-	if (data.id) registry[id] = {
+	if (data.id) registry[data.id] = {
 		request: data,
 		callback,
 		subscribed: data.type === 'subscribe_events'
