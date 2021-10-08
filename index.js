@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import { HA_AUTH_HEADER, HA_URL, PORT } from './constants';
+import socket from './utils/homeassistantWebsocket';
 
 const app = express();
 
@@ -29,3 +30,5 @@ app.post('/homeassistant*', async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
+
+console.log(socket);
