@@ -29,15 +29,15 @@ app.post('/homeassistant*', async (req, res) => {
 	}
 });
 
-app.get('/websocket/:function/?*', (req, res) => {
+const handleWebsocketRequest = (req, res) => {
 	const handler = commands[req.params.function];
-	if (!handler || typeof handler !== 'function') res.status(404).send({ message: 'Handler not found.' });
-	const params = req.originalUrl.split(`/websocket/${req.params.function}/`)[1].split('/');
-	handler((data) => res.status(200).send(data), ...(params || []));
-});
+	if (!handler || typeof handler !== 'function') res.status(404).send({ message: 'Handler not found.', handler: req.params.function });
+	const urlComponents = req.originalUrl.split(`/websocket/${req.params.function}/`);
+	const params = urlComponents.length > 1 ? urlComponents[1].split('/') : [];
+	handler((data) => res.status(200).send(data), ...params);
+};
 
-const fetchWS = async (res, handler, ...params) => {
-	handler()
-}
+app.get('/websocket/:function', handleWebsocketRequest);
+app.get('/websocket/:function/*', handleWebsocketRequest);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
