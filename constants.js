@@ -4,6 +4,6 @@ export const PORT = 3000;
 
 export const HA_AUTH_HEADER = {
 	headers: {
-		'Authorization': `token ${process.env.SUPERVISOR_TOKEN}`
+		'Authorization': `Bearer ${process.env.SUPERVISOR_TOKEN}`
 	}
 };
