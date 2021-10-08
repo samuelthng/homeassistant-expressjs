@@ -1,4 +1,4 @@
-export const { SUPERVISOR_TOKEN } = process.env;
+const { SUPERVISOR_TOKEN } = process.env;
 
 export const HA_BASE = `http://supervisor/core`;
 
