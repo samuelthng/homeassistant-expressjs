@@ -16,4 +16,16 @@ app.get('/homeassistant*', async (req, res) => {
 	}
 });
 
+app.post('/homeassistant*', async (req, res) => {
+	const { originalUrl } = req;
+	const query = originalUrl.split('/homeassistant')[1];
+	if (!query) res.status(400).send({ message: "Invalid endpoint." });
+	try {
+		const response = await axios.post(`${HA_URL}${query}`, req.body, HA_AUTH_HEADER);
+		res.status(response.status).send(response.data);
+	} catch (error) {
+		res.status(400).send(error);
+	}
+});
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}…`));
